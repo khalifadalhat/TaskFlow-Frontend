@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ArrowLeftRight } from 'lucide-react';
-import Group from '../../public/images/Group.png';
-import Frame from '../../public/images/Frame.png';
+import Frame from '@/assets/images/Frame.png';
 import Image from 'next/image';
+import { getImage } from '@/utils/getImage';
 
 export default function Hero() {
   const [formData, setFormData] = useState({
@@ -37,7 +37,7 @@ export default function Hero() {
 
           <div className="justify-center hidden lg:flex">
             <div className="relative">
-              <Image src={Group} alt="group" />
+              <Image src={getImage('group')} alt="group" />
             </div>
           </div>
         </div>

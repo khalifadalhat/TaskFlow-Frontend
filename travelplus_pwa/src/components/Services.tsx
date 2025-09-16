@@ -1,4 +1,5 @@
-import { MapPin, Package, User } from 'lucide-react';
+import { getImage } from '@/utils/getImage';
+import Image from 'next/image';
 
 export default function Services() {
   return (
@@ -14,27 +15,35 @@ export default function Services() {
         </div>
         <div className="grid gap-8 md:grid-cols-3">
           <div className="text-center">
-            <div className="p-6 bg-white shadow-lg rounded-2xl">
-              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
-                <MapPin className="w-8 h-8 text-green-600" />
+            <div className="p-6 ">
+              <div className="flex items-center justify-center w-[156px] h-[156px] mx-auto mb-4 rounded-full">
+                <Image src={getImage('map')} className="object-cover object-center" alt="map" />
               </div>
               <h4 className="mb-3 text-xl font-semibold text-gray-900">Inter-State Services</h4>
               <p className="text-gray-600">We Pick And Deliver Packages To Your Door Step</p>
             </div>
           </div>
           <div className="text-center">
-            <div className="p-6 bg-white shadow-lg rounded-2xl">
-              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
-                <Package className="w-8 h-8 text-green-600" />
+            <div className="p-6">
+              <div className="flex items-center justify-center w-[156px] h-[156px] mx-auto mb-4 rounded-full">
+                <Image
+                  src={getImage('package')}
+                  className="object-cover object-center"
+                  alt="package"
+                />
               </div>
               <h4 className="mb-3 text-xl font-semibold text-gray-900">Package Delivery</h4>
               <p className="text-gray-600">We Pick And Deliver Packages To Your Door Step</p>
             </div>
           </div>
           <div className="text-center">
-            <div className="p-6 bg-white shadow-lg rounded-2xl">
-              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
-                <User className="w-8 h-8 text-green-600" />
+            <div className="p-6">
+              <div className="flex items-center justify-center w-[156px] h-[156px] mx-auto mb-4 rounded-full">
+                <Image
+                  src={getImage('location')}
+                  className="object-cover object-center"
+                  alt="location"
+                />
               </div>
               <h4 className="mb-3 text-xl font-semibold text-gray-900">Address Pick Up</h4>
               <p className="text-gray-600">

@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import Logo from '../../public/images/Logo.png';
 import Image from 'next/image';
+import { getImage } from '@/utils/getImage';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +14,7 @@ export default function Header() {
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Image src={Logo} alt="logo" />
+            <Image src={getImage('logo')} alt="logo" />
           </div>
 
           <nav className="hidden space-x-8 md:flex">

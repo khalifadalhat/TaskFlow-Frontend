@@ -1,7 +1,4 @@
-import Background from '../../public/images/Background.png';
-import CheckCircle from '../../public/images/material-symbols-light_mobile-friendly-sharp.png';
-import Car from '../../public/images/mdi_car-select.png';
-import Download from '../../public/images/ri_mobile-download-line.png';
+import { getImage } from '@/utils/getImage';
 import Image from 'next/image';
 
 export default function HowItWorks() {
@@ -17,41 +14,45 @@ export default function HowItWorks() {
         </div>
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="flex justify-center">
-            <div className="flex items-center justify-center w-80 h-96 rounded-3xl">
-              <Image src={Background} className="w-full h-full rounded-2xl" alt="background" />
+            <div className="flex items-center justify-center w-full h-full rounded-3xl">
+              <Image
+                src={getImage('background')}
+                className="object-cover object-center w-full h-full"
+                alt="background"
+              />
             </div>
           </div>
-          <div className="w-full mt-12 space-y-8 border-l">
-            <div className="flex items-center justify-center space-x-4">
-              <div className="p-3 rounded-full w-[100px] h-[100px]">
-                <Image src={Download} alt="download" />
+          <div className="flex flex-col justify-center w-full h-full pl-6 space-y-8 border-l">
+            {[
+              {
+                src: 'download',
+                alt: 'download',
+                text: 'Download The App From Google Play And App Store',
+              },
+              {
+                src: 'car',
+                alt: 'Car',
+                text: 'Choose The Route In Which You Are Travelling To',
+              },
+              {
+                src: 'checkCircle',
+                alt: 'CheckCircle',
+                text: 'Book your ride and start your journey ...',
+              },
+            ].map((item, i) => (
+              <div key={i} className="flex items-center space-x-4">
+                <div className="relative w-[100px] h-[100px] rounded-full overflow-hidden flex-shrink-0">
+                  <Image
+                    src={getImage(item.src)}
+                    alt={item.alt}
+                    fill
+                    className="object-cover object-center"
+                  />
+                </div>
+
+                <h4 className="text-base font-semibold text-gray-900">{item.text}</h4>
               </div>
-              <div>
-                <h4 className="mb-2 text-base font-semibold text-gray-900">
-                  Download The App From Google Play And App Store
-                </h4>
-              </div>
-            </div>
-            <div className="flex items-center justify-center space-x-4">
-              <div className="p-3 rounded-full w-[100px] h-[100px]">
-                <Image src={Car} alt="Car" />
-              </div>
-              <div>
-                <h4 className="mb-2 text-base font-semibold text-gray-900">
-                  Choose The Route In Which You Are Travelling To
-                </h4>
-              </div>
-            </div>
-            <div className="flex items-center justify-center space-x-4">
-              <div className="p-3 rounded-full w-[100px] h-[100px]">
-                <Image src={CheckCircle} alt="CheckCircle" />
-              </div>
-              <div>
-                <h4 className="mb-2 text-base font-semibold text-gray-900">
-                  book your ride and start your your journey ...
-                </h4>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
