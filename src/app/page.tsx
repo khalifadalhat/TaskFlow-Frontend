@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -18,12 +17,13 @@ import {
   Star,
   TrendingUp,
 } from 'lucide-react';
-import { useAuth } from './provider/auth-provider';
+import Autoplay from 'embla-carousel-autoplay';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+
+const bgImages = ['/images/team-mngt.jpg', '/images/team.jpg', '/images/team-work.jpg'];
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -100,47 +100,70 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-32 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+      <section className="relative w-full h-screen overflow-hidden">
+        <Carousel
+          className="absolute inset-0 z-0"
+          opts={{ loop: true }}
+          plugins={[
+            Autoplay({
+              delay: 3000,
+            }),
+          ]}>
+          <CarouselContent>
+            {bgImages.map((img, index) => (
+              <CarouselItem key={index}>
+                <div
+                  className="w-full h-screen bg-center bg-cover"
+                  style={{ backgroundImage: `url(${img})` }}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
 
-        <div className="container relative px-4 mx-auto sm:px-6 lg:px-8">
-          <div className="text-center">
-            <Badge className="px-4 py-1 mb-4 text-sm font-semibold">
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Trusted by 5,000+ teams worldwide
-            </Badge>
+        <div className="absolute inset-0 z-10 bg-linear-to-br from-white/80 via-white/70 to-indigo-100/70" />
 
-            <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
-              Streamline Your Team&apos;s
-              <span className="block mt-2 text-blue-600">Project Management</span>
-            </h1>
+        <div className="absolute inset-0 z-10 bg-grid-slate-100/40 [mask-[linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
 
-            <p className="max-w-2xl mx-auto mt-6 text-xl text-gray-600">
-              A comprehensive role-based platform for admins, managers, and team members to
-              collaborate, track progress, and drive productivity.
-            </p>
+        <div className="relative z-20 flex items-center h-full">
+          <div className="container px-4 mx-auto sm:px-6 lg:px-8">
+            <div className="text-center">
+              <Badge className="px-4 py-1 mb-4 text-sm font-semibold">
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Trusted by 5,000+ teams worldwide
+              </Badge>
 
-            <div className="flex flex-col justify-center gap-4 mt-10 sm:flex-row">
-              <Button size="lg" className="px-8" asChild>
-                <Link href="/register">
-                  Get Started Free
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
+              <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
+                Streamline Your Team&apos;s
+                <span className="block mt-2 text-blue-600">Project Management</span>
+              </h1>
 
-              <Button size="lg" variant="outline" className="px-8" asChild>
-                <Link href="/login">Sign In</Link>
-              </Button>
-            </div>
+              <p className="max-w-2xl mx-auto mt-6 text-xl text-gray-700">
+                A comprehensive role-based platform for admins, managers, and team members to
+                collaborate, track progress, and drive productivity.
+              </p>
 
-            <div className="grid max-w-4xl grid-cols-2 gap-6 mx-auto mt-12 md:grid-cols-4">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">{stat.value}</div>
-                  <div className="mt-1 text-sm text-gray-600">{stat.label}</div>
-                </div>
-              ))}
+              <div className="flex flex-col justify-center gap-4 mt-10 sm:flex-row">
+                <Button size="lg" className="px-8" asChild>
+                  <Link href="/register">
+                    Get Started Free
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+
+                <Button size="lg" variant="outline" className="px-8" asChild>
+                  <Link href="/login">Sign In</Link>
+                </Button>
+              </div>
+
+              <div className="grid max-w-4xl grid-cols-2 gap-6 mx-auto mt-12 md:grid-cols-4">
+                {stats.map((stat, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-3xl font-bold text-blue-600">{stat.value}</div>
+                    <div className="mt-1 text-sm text-gray-600">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -347,7 +370,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700">
+      <section className="py-20 bg-linear-to-r from-blue-600 to-indigo-700">
         <div className="container px-4 mx-auto text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
             Ready to Transform Your Team&apos;s Productivity?
