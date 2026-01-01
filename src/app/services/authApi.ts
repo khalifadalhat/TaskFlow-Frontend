@@ -64,7 +64,7 @@ export const authApi = {
     success: boolean;
     message: string;
   }> {
-    const response = await api.post('/auth/resend-verification-otp', { email });
+    const response = await api.post('/auth/resend-verification', { email });
     return response.data;
   },
 
