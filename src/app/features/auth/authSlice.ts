@@ -132,9 +132,14 @@ const authSlice = createSlice({
         state.error = null;
         state.needsVerification = false;
 
+        const userData = action.payload.user;
+
         localStorage.setItem('token', action.payload.token);
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        localStorage.setItem('role', action.payload.user.role);
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('role', userData.role);
+
+        document.cookie = `token=${action.payload.token}; path=/; max-age=86400; SameSite=strict`;
+        document.cookie = `role=${userData.role}; path=/; max-age=86400; SameSite=strict`;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -181,9 +186,14 @@ const authSlice = createSlice({
         state.success = true;
         state.error = null;
 
+        const userData = action.payload.user;
+
         localStorage.setItem('token', action.payload.token);
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        localStorage.setItem('role', action.payload.user.role);
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('role', userData.role);
+
+        document.cookie = `token=${action.payload.token}; path=/; max-age=86400; SameSite=strict`;
+        document.cookie = `role=${userData.role}; path=/; max-age=86400; SameSite=strict`;
       })
       .addCase(verifyEmail.rejected, (state, action) => {
         state.isLoading = false;
@@ -191,6 +201,13 @@ const authSlice = createSlice({
       });
 
     builder.addCase(logout.fulfilled, state => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('role');
+
+      document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'role=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
       state.user = null;
       state.token = null;
       state.needsVerification = false;
