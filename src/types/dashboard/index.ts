@@ -66,3 +66,25 @@ export interface DashboardState {
   error: string | null;
   lastFetched: number | null;
 }
+
+export interface MemberDashboardKPIs {
+  myProjects: number;
+  activeProjects: number;
+  myTasks: number;
+  completedTasks: number;
+  overdueTasks: number;
+  tasksDueThisWeek: number;
+  completionRate: number;
+}
+
+export interface MemberDashboardData {
+  timeframe: string;
+  kpis: MemberDashboardKPIs;
+}
+
+export interface MemberDashboardState {
+  data: MemberDashboardData | null;
+  isLoading: boolean;
+  error: string | null;
+  lastFetched: number | null;
+}
