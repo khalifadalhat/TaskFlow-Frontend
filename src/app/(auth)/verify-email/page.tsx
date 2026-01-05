@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { verifyEmail, resendVerificationOTP } from '@/app/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Mail, Shield, CheckCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-export default function VerifyEmailPage() {
+
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
@@ -178,5 +179,18 @@ export default function VerifyEmailPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+        </div>
+      }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
