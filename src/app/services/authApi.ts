@@ -7,7 +7,7 @@ import {
 } from "@/types/auth";
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = "/api";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -34,7 +34,7 @@ api.interceptors.response.use(
 
 export const authApi = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await api.post("/auth/login", credentials);
+    const response = await api.post("/auth", credentials);
     return response.data;
   },
 
