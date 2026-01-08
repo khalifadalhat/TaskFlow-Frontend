@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { action: string } }
+  { params }: { params: Promise<{ action: string }> }
 ) {
-  const action = params.action;
+  const { action } = await params;
   const body = await request.json();
 
   try {
@@ -57,7 +57,6 @@ export async function POST(
       }
     }
     if (action === "logout") {
-      const nextResponse = NextResponse.json({ success: true });
       nextResponse.cookies.set("access_token", "", { maxAge: 0, path: "/" });
       nextResponse.cookies.set("user_role", "", { maxAge: 0, path: "/" });
     }
