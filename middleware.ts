@@ -4,8 +4,8 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const token = request.cookies.get('token')?.value;
-  const role = request.cookies.get('role')?.value;
+  const token = request.cookies.get('access_token')?.value;
+  const role = request.cookies.get('user_role')?.value;
 
   console.log('Middleware check:', {
     pathname,
