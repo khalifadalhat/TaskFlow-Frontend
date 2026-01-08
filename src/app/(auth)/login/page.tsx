@@ -36,9 +36,7 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  const { isLoading, error, success, user } = useAppSelector(
-    (state) => state.auth
-  );
+  const { isLoading, error } = useAppSelector((state) => state.auth);
 
   const {
     register,
@@ -49,34 +47,39 @@ function LoginContent() {
   });
 
   useEffect(() => {
-    if (!success || !user) return;
-
-    toast("Logged in successfully.");
-
-    if (callbackUrl) {
-      router.replace(callbackUrl);
-      return;
-    }
-
-    const roleDashboardMap: Record<string, string> = {
-      admin: "/admin",
-      manager: "/manager",
-      user: "/member",
-    };
-
-    const redirectTo = roleDashboardMap[user.role];
-
-    router.replace(redirectTo ?? "/login");
-  }, [success, user, callbackUrl, router]);
-
-  useEffect(() => {
     dispatch(clearError());
   }, [dispatch]);
 
   const onSubmit = async (data: LoginFormData) => {
     const result = await dispatch(login(data));
 
-    if (
+    if (login.fulfilled.match(result)) {
+      toast.success("Logged in successfully.");
+
+      const userData = result.payload.user;
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      if (callbackUrl) {
+        router.replace(callbackUrl);
+        return;
+      }
+
+      const roleDashboardMap: Record<string, string> = {
+        admin: "/admin",
+        manager: "/manager",
+        user: "/member",
+      };
+
+      const redirectTo = roleDashboardMap[userData.role];
+
+      if (redirectTo) {
+        router.replace(redirectTo);
+      } else {
+        console.error("Unknown role:", userData.role);
+        router.replace("/login");
+      }
+    } else if (
       result.payload &&
       typeof result.payload === "object" &&
       "needsVerification" in result.payload
