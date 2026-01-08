@@ -43,7 +43,10 @@ export const login = createAsyncThunk<
 >("auth/login", async (credentials: LoginCredentials, { rejectWithValue }) => {
   try {
     const response = await authApi.login(credentials);
-    return response.data;
+    return {
+      user: response.data.user,
+      token: response.data.token,
+    };
   } catch (error) {
     if (
       isAxiosError(error) &&
