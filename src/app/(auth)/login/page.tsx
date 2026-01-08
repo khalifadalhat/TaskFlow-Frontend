@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, Suspense } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +33,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 function LoginContent() {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const { isLoading, error, success, user } = useAppSelector(
     (state) => state.auth
@@ -51,20 +53,21 @@ function LoginContent() {
 
     toast("Logged in successfully.");
 
+    if (callbackUrl) {
+      router.replace(callbackUrl);
+      return;
+    }
+
     const roleDashboardMap: Record<string, string> = {
       admin: "/admin",
-      user: "/member",
       manager: "/manager",
+      user: "/member",
     };
 
     const redirectTo = roleDashboardMap[user.role];
 
-    if (redirectTo) {
-      router.replace(redirectTo);
-    } else {
-      router.replace("/login");
-    }
-  }, [success, user, router]);
+    router.replace(redirectTo ?? "/login");
+  }, [success, user, callbackUrl, router]);
 
   useEffect(() => {
     dispatch(clearError());
