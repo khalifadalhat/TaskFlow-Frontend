@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { login, clearError } from '@/app/features/auth/authSlice';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useEffect, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { login, clearError } from "@/app/features/auth/authSlice";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -16,45 +16,55 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, Mail, Lock, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 function LoginContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/admin';
   const dispatch = useAppDispatch();
 
-  const { isLoading, error, success, user, needsVerification } = useAppSelector(
-    state => state.auth
+  const { isLoading, error, success, user } = useAppSelector(
+    (state) => state.auth
   );
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
   useEffect(() => {
-    if (success && user) {
-      toast('Logged in successfully.');
-      router.push(callbackUrl);
+    if (!success || !user) return;
+
+    toast("Logged in successfully.");
+
+    const roleDashboardMap: Record<string, string> = {
+      admin: "/admin",
+      user: "/member",
+      manager: "/manager",
+    };
+
+    const redirectTo = roleDashboardMap[user.role];
+
+    if (redirectTo) {
+      router.replace(redirectTo);
+    } else {
+      router.replace("/login");
     }
-  }, [success, user, router, callbackUrl]);
+  }, [success, user, router]);
 
   useEffect(() => {
     dispatch(clearError());
@@ -63,15 +73,12 @@ function LoginContent() {
   const onSubmit = async (data: LoginFormData) => {
     const result = await dispatch(login(data));
 
-    if (login.rejected.match(result)) {
-      const errorMessage = result.payload as string;
-      toast(errorMessage, {
-        className: 'bg-red-600 text-white',
-      });
-
-      if (needsVerification) {
-        router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
-      }
+    if (
+      result.payload &&
+      typeof result.payload === "object" &&
+      "needsVerification" in result.payload
+    ) {
+      router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
     }
   };
 
@@ -84,7 +91,9 @@ function LoginContent() {
               <span className="text-xl font-bold text-white">TF</span>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Admin Login</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Admin Login
+          </CardTitle>
           <CardDescription className="text-center">
             Enter your credentials to access the admin dashboard
           </CardDescription>
@@ -109,16 +118,21 @@ function LoginContent() {
                   placeholder="admin@example.com"
                   className="pl-10"
                   disabled={isLoading}
-                  {...register('email')}
+                  {...register("email")}
                 />
               </div>
-              {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-blue-600 hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>
@@ -130,10 +144,14 @@ function LoginContent() {
                   placeholder="••••••••"
                   className="pl-10"
                   disabled={isLoading}
-                  {...register('password')}
+                  {...register("password")}
                 />
               </div>
-              {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-sm text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
@@ -143,7 +161,7 @@ function LoginContent() {
                   Signing in...
                 </>
               ) : (
-                'Sign In'
+                "Sign In"
               )}
             </Button>
           </form>
@@ -151,8 +169,11 @@ function LoginContent() {
 
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-center text-gray-600">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="font-medium text-blue-600 hover:underline">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="font-medium text-blue-600 hover:underline"
+            >
               Register here
             </Link>
           </div>
@@ -169,7 +190,8 @@ export default function LoginPage() {
         <div className="flex items-center justify-center min-h-screen">
           <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
         </div>
-      }>
+      }
+    >
       <LoginContent />
     </Suspense>
   );
