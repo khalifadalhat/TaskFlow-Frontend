@@ -38,8 +38,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin dark:border-blue-500"></div>
       </div>
     );
   }
@@ -57,28 +57,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b">
+      <header className="sticky top-0 z-40 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
         <div className="flex items-center h-16 px-6">
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-lg">
               <span className="font-bold text-white">A</span>
             </div>
-            <span className="hidden text-xl font-bold md:inline">Admin Panel</span>
+            <span className="hidden text-xl font-bold md:inline dark:text-white">Admin Panel</span>
           </div>
 
           <div className="flex items-center gap-4 ml-auto">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
-                <span className="font-semibold text-blue-600">
+              <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full dark:bg-blue-900/30">
+                <span className="font-semibold text-blue-600 dark:text-blue-400">
                   {user.firstName?.charAt(0)}
                   {user.lastName?.charAt(0)}
                 </span>
               </div>
             </div>
 
-            <Button variant="ghost" size="icon" className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative dark:text-gray-300 dark:hover:bg-gray-700">
               <Bell className="w-5 h-5" />
               <span className="absolute w-2 h-2 bg-red-500 rounded-full -top-1 -right-1"></span>
             </Button>
@@ -86,7 +89,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="dark:text-gray-300 dark:hover:bg-gray-700">
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
           </div>
@@ -95,26 +99,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="hidden w-64 bg-white border-r md:block sticky top-16 h-[calc(100vh-64px)]">
+        <aside className="hidden w-64 bg-white border-r md:block sticky top-16 h-[calc(100vh-64px)] dark:bg-gray-800 dark:border-gray-700">
           <div className="flex flex-col h-full">
             <nav className="flex-1 p-4 space-y-1">
               {navItems.map(item => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-gray-100">
+                  className="flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300">
                   <item.icon className="w-4 h-4" />
                   {item.name}
                 </Link>
               ))}
             </nav>
 
-            <div className="p-4 border-t">
+            <div className="p-4 border-t dark:border-gray-700">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleLogout}
-                className="justify-start w-full gap-2 text-red-600 hover:text-red-700 hover:bg-red-50">
+                className="justify-start w-full gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/30">
                 <LogOut className="w-4 h-4" />
                 <span className="hidden md:inline">Logout</span>
               </Button>
@@ -123,7 +127,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        <main className="flex-1 p-4 md:p-6 dark:bg-gray-900">{children}</main>
       </div>
     </div>
   );
